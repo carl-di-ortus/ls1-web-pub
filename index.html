@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="ddmenu.js" ></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="content.js"></script>
+
+    <title>Tabbed menu with dummy page contents</title>
+</head>
+<body onload="init()">
+    
+<h2>LSat1-web-pub</h2>
+
+<!-- menu tabs -->
+<nav  style="padding:20px 20px;" id="ddmenu">
+    <ul id="tabs">
+        <li><a href="#Telemetry">Telemetry</a>
+            <div>
+                <div class="column">
+                    <b>Station data</b>
+                    <a href="#Telemetry">Newest</a>
+                    <a href="#">Archive</a>
+                </div>
+                <div class="column">
+                    <b>Global amateur radio</b>
+                    <a href="#">Submit telemetry data</a>
+                    <a href="#">Amateur data archive</a>
+                </div>
+            </div>
+        </li>
+        <li><a href="#GPS">GPS</a>
+            <div>
+                <div class="column">
+                    <a href="#GPS">Map</a>
+                    <a href="#">History</a>
+                </div>
+            </div>
+        </li>
+        <li><a href="#Photo">Photo</a></li>
+    </ul>
+</nav>
+
+<!-- Telemetry tab nuoroda -->
+<div class="tabContent" id="Telemetry">
+    <h3>Telemetry data</h3>
+    <div>   
+        <div id="chart_div" style="width: 900px; height: 500px;"></div>
+		<p>[Dummy other text]</p>
+    </div>
+</div>
+
+<!-- GPS tab nuoroda -->
+<div class="tabContent" id="GPS">
+    <h2>GPS data</h2>
+    <div>
+		<p>Map GPS coordinates</p>
+    </div>
+</div>
+
+<!-- Photo tab nuoroda -->
+<div class="tabContent" id="Photo">
+    <h2>Photo data</h2>
+	<div>
+        <p>Photo table</p>
+		<p>Photo Location </p>
+		<p>Map Photo</p>
+	</div>
+</div>
+
+</body>
+</html>
