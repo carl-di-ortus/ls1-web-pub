@@ -1,72 +1,104 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link href="style.css" rel="stylesheet" type="text/css" />
-    <script type="text/javascript" src="ddmenu.js" ></script>
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type="text/javascript" src="content.js"></script>
+    <link href="css/bootstrap.css" rel="stylesheet" type="text/css" />
 
-    <title>Tabbed menu with dummy page contents</title>
+    <title>Tabbed nav-bar menu with dummy page contents</title>
 </head>
-<body onload="init()">
+<body>
     
-<h2>LSat1-web-pub</h2>
+<h2><a href="./index.html">LSat1-web-pub</a></h2>
 
-<!-- menu tabs -->
-<nav  style="padding:20px 20px;" id="ddmenu">
-    <ul id="tabs">
-        <li><a href="#Telemetry">Telemetry</a>
-            <div>
-                <div class="column">
-                    <b>Station data</b>
-                    <a href="#Telemetry">Newest</a>
-                    <a href="#">Archive</a>
-                </div>
-                <div class="column">
-                    <b>Global amateur radio</b>
-                    <a href="#">Submit telemetry data</a>
-                    <a href="#">Amateur data archive</a>
-                </div>
-            </div>
-        </li>
-        <li><a href="#GPS">GPS</a>
-            <div>
-                <div class="column">
-                    <a href="#GPS">Map</a>
-                    <a href="#">History</a>
-                </div>
-            </div>
-        </li>
-        <li><a href="#Photo">Photo</a></li>
-    </ul>
-</nav>
+<!-- ==== Nav-bar tabbed menu ==== -->
+<ul class="nav nav-tabs">
+    <li class="dropdown active">
+        <a id="drop1" class="dropdown-toggle" data-toggle="dropdown" href="#">Telemetry<b class="caret"></b></a>
+        <ul class="dropdown-menu" aria-labelledby="drop1">
+            <li class="active"><a href="#Telemetry" data-toggle="tab">Newest</a></li>
+            <li><a href="#Archive" data-toggle="tab">Archive</a></li>
+            <li class="divider" />
+            <li><a href="#Submit" data-toggle="tab">Submit telemetry data</a></li>
+            <li><a href="#Amateur" data-toggle="tab">Amateur data archive</a></li>
+        </ul>
+    </li>
+    <li class="dropdown">
+        <a id="drop2" class="dropdown-toggle" data-toggle="dropdown" href="#">GPS<b class="caret"></b></a>
+        <ul class="dropdown-menu" aria-labelledby="drop2">
+            <li><a href="#GPS" data-toggle="tab">Map</a></li>
+            <li><a href="#History" data-toggle="tab">History</a></li>
+        </ul>
+    </li>
+    <li><a data-toggle="tab" href="#Photo">Photo</a></li>
+</ul>
 
-<!-- Telemetry tab nuoroda -->
-<div class="tabContent" id="Telemetry">
-    <h3>Telemetry data</h3>
-    <div>   
-        <div id="chart_div" style="width: 900px; height: 500px;"></div>
-		<p>[Dummy other text]</p>
+<!-- ==== Content ==== -->
+<div class="tab-content">
+    
+    <!-- ==== Newest telemetry ==== -->
+    <div id="Telemetry" class="tab-pane fade active in">
+        <h3>Telemetry data</h3>
+        <div>   
+            <div id="chart_div" style="width: 500px; height: 500px;"></div>
+            <p>[Dummy other text]</p>
+        </div>
+    </div>
+    
+    <!-- ==== Telemetry archive ==== -->
+    <div id="Archive" class="tab-pane fade">
+        <h3>Telemetry archive</h3>
+        <div>
+            <p>todo: insert table here</p>
+        </div>
+    </div>
+    
+    <!-- ==== Amateur submit page ==== -->
+    <div id="Submit" class="tab-pane fade">
+        <h3>Submit data</h3>
+        <div>
+            <p>todo: insert submition fields here</p>
+        </div>
+    </div>
+    
+    <!-- ==== Amateur archive ==== -->
+    <div id="Amateur" class="tab-pane fade">
+        <h3>Amateur radio archive</h3>
+        <div>
+            <p>todo: insert amateur archive table here</p>
+        </div>
+    </div>
+    
+    <!-- ==== GPS map ==== -->
+    <div id="GPS" class="tab-pane fade">
+        <h3>GPS data</h3>
+        <div>
+            <p>todo: Map GPS coordinates</p>
+        </div>
+    </div>
+    
+    <!-- ==== GPS history table ==== -->
+    <div id="History" class="tab-pane fade">
+        <h3>GPS history</h3>
+        <div>
+            <p>todo: insert table here</p>
+        </div>
+    </div>
+    
+    <!-- ==== Photo table ==== -->
+    <div id="Photo" class="tab-pane fade">
+        <h3>Photo data</h3>
+        <div>
+            <p>Photo table</p>
+            <p>Photo Location </p>
+            <p>Map Photo</p>
+        </div>
     </div>
 </div>
 
-<!-- GPS tab nuoroda -->
-<div class="tabContent" id="GPS">
-    <h2>GPS data</h2>
-    <div>
-		<p>Map GPS coordinates</p>
-    </div>
-</div>
-
-<!-- Photo tab nuoroda -->
-<div class="tabContent" id="Photo">
-    <h2>Photo data</h2>
-	<div>
-        <p>Photo table</p>
-		<p>Photo Location </p>
-		<p>Map Photo</p>
-	</div>
-</div>
+<!-- ==== Loading JS (they say it's faster here, than in <head> tag) ==== -->
+<script src="js/jquery-1.9.1.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="https://www.google.com/jsapi"></script>
+<script src="js/content.js"></script>
 
 </body>
 </html>
