@@ -12,8 +12,8 @@
 <!-- ==== Nav-bar tabbed menu ==== -->
 <ul class="nav nav-tabs">
     <li class="dropdown active">
-        <a id="drop1" class="dropdown-toggle" data-toggle="dropdown" href="#">Telemetry<b class="caret"></b></a>
-        <ul class="dropdown-menu" aria-labelledby="drop1">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Telemetry<b class="caret"></b></a>
+        <ul class="dropdown-menu">
             <li class="active"><a href="#Telemetry" data-toggle="tab">Newest</a></li>
             <li><a href="#Archive" data-toggle="tab">Archive</a></li>
             <li class="divider" />
@@ -22,8 +22,8 @@
         </ul>
     </li>
     <li class="dropdown">
-        <a id="drop2" class="dropdown-toggle" data-toggle="dropdown" href="#">GPS<b class="caret"></b></a>
-        <ul class="dropdown-menu" aria-labelledby="drop2">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">GPS<b class="caret"></b></a>
+        <ul class="dropdown-menu">
             <li><a href="#GPS" data-toggle="tab">Map</a></li>
             <li><a href="#History" data-toggle="tab">History</a></li>
         </ul>
@@ -48,6 +48,22 @@
         <h3>Telemetry archive</h3>
         <div>
             <p>todo: insert table here</p>
+            <span id="TArchive"></span>
+            <script type="text/javascript" language="javascript">
+                var the_object = {}; 
+                var http_request = new XMLHttpRequest();
+                http_request.open( "GET", "http://127.0.0.1:12321/ls1mcs/api/telemetry/5646", true );
+                
+                http_request.onreadystatechange = function () {
+                    if ( http_request.readyState == 4 && http_request.status == 200 ) {
+                        the_object = JSON.parse( http_request.responseText );
+                        document.getElementById("TArchive").innerHTML=the_object.field1+" "+the_object.field2
+                    } else {
+                        document.getElementById("TArchive").innerHTML="Error: Could not get data"
+                    }
+                };
+                http_request.send(null);
+            </script>
         </div>
     </div>
     
@@ -72,6 +88,11 @@
         <h3>GPS data</h3>
         <div>
             <p>todo: Map GPS coordinates</p>
+            <svg>
+                <circle cx="100" cy="50" r="3" stroke="black" fill="yellow"/>
+                <circle cx="200" cy="50" r="20" stroke="black" fill="yellow"
+                    fill-opacity="0.2"/>
+            </svg>
         </div>
     </div>
     
