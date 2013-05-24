@@ -4,6 +4,11 @@
     <link href="css/bootstrap.css" rel="stylesheet" type="text/css" />
 
     <title>Tabbed nav-bar menu with dummy page contents</title>
+    
+    <style type="text/css" media="screen">
+        canvas, img { display:block; margin:1em auto; border:1px solid black; }
+        canvas { background:url(img/earth_800.png) }
+    </style>
 </head>
 <body>
     
@@ -49,6 +54,7 @@
         <div>
             <p>todo: insert table here</p>
             <span id="TArchive"></span>
+            <!--
             <script type="text/javascript" language="javascript">
                 var the_object = {}; 
                 var http_request = new XMLHttpRequest();
@@ -64,6 +70,7 @@
                 };
                 http_request.send(null);
             </script>
+            -->
         </div>
     </div>
     
@@ -86,14 +93,63 @@
     <!-- ==== GPS map ==== -->
     <div id="GPS" class="tab-pane fade">
         <h3>GPS data</h3>
-        <div>
-            <p>todo: Map GPS coordinates</p>
-            <svg>
-                <circle cx="100" cy="50" r="3" stroke="black" fill="yellow"/>
-                <circle cx="200" cy="50" r="20" stroke="black" fill="yellow"
-                    fill-opacity="0.2"/>
-            </svg>
-        </div>
+        <canvas id="MapCanvas" width="800" height="400">
+            If you see this - your browser does not support HTML5 Canvas.
+        </canvas>
+        <div id="Coord">   </div>
+        <script type="text/javascript" language="javascript">
+            function getData() {
+                setTimeout(function () {
+                    var http_request = new XMLHttpRequest();
+                    http_request.open( "GET","http://127.0.0.1:12321/ls1mcs/api/sat/LS1/position/predicted/current", true );
+                    
+                    http_request.onreadystatechange = function () {
+                        if ( http_request.readyState == 4 && http_request.status == 200 ) {
+                            var position = JSON.parse( http_request.responseText );
+                            draw(position);
+                        } else {
+                            document.getElementById("Coord").innerHTML+="Error: Could not get data"
+                        }
+                    };
+                    http_request.send(null);
+                    getData();
+                }, 1000)
+            }
+            
+            getData();
+            function draw(data) {
+                var time = data.timestamp;
+                var lon = data.longitude;
+                var lat = data.latitude;
+                var alt = data.altitude;
+                putFootprint(lon, lat, alt);
+                putDot(lon, lat);
+                document.getElementById("Coord").innerHTML="Timestamp: "+time+"<br/>Longitude: "+lon+"<br/>Latitude: "+lat+"<br/>Altitude: "+alt
+            }
+            function putDot(lon, lat) {
+                var x = lon*400/180+400;
+                var y = lat*200/90+200;
+                var spot = document.getElementById("MapCanvas");
+                var context = spot.getContext('2d');
+//                context.clearRect(0, 0, spot.width, spot.height);
+                context.fillStyle = 'red';
+                context.fillRect(x, y, 3, 3);
+            }
+            function putFootprint(lon, lat, alt) {
+                var x = lon*400/180+400;
+                var y = lat*200/90+200;
+                var a = alt
+                var foot_radius = Math.acos(6371/(6371+a))*6371;
+                var draw_radius = (foot_radius/20000)*400;
+                var spot = document.getElementById("MapCanvas");
+                var context = spot.getContext('2d');
+                context.clearRect(0, 0, spot.width, spot.height);
+                context.beginPath();
+                context.arc(x, y, draw_radius, 0, 2 * Math.PI, true);
+                context.strokeStyle = 'yellow';
+                context.stroke();
+            }
+        </script>
     </div>
     
     <!-- ==== GPS history table ==== -->
