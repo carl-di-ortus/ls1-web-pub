@@ -108,7 +108,7 @@
                             var position = JSON.parse( http_request.responseText );
                             draw(position);
                         } else {
-                            document.getElementById("Coord").innerHTML+="Error: Could not get data"
+                            document.getElementById("Coord").innerHTML="Error: Could not get data"
                         }
                     };
                     http_request.send(null);
@@ -122,7 +122,7 @@
                 var lon = data.longitude;
                 var lat = data.latitude;
                 var alt = data.altitude;
-                putFootprint(lon, lat, alt);
+                putFootprint(lon, lat, alt/1000);
                 putDot(lon, lat);
                 document.getElementById("Coord").innerHTML="Timestamp: "+time+"<br/>Longitude: "+lon+"<br/>Latitude: "+lat+"<br/>Altitude: "+alt
             }
@@ -136,18 +136,84 @@
                 context.fillRect(x, y, 3, 3);
             }
             function putFootprint(lon, lat, alt) {
-                var x = lon*400/180+400;
+                var de2ra = 0.0174532925;
+                var beta = Math.acos(6371/(6371+alt));
+                var foot_radius = beta*6371;    //km
+                
+                var points = new Array();
+                for (var azi=0; azi<180; azi++) {
+                    var azimuth = de2ra * azi;
+                    
+                    var alpha = Math.acos( Math.cos(beta) * Math.cos(Math.PI/2-lat*de2ra) + Math.sin(Math.PI/2-lat*de2ra) * Math.sin(beta) * Math.cos(azimuth) );
+                    
+                    var BETA = Math.asin( Math.sin(beta) * Math.sin(azimuth) / Math.sin(alpha) );
+                    
+                    var lat2 = (Math.PI/2-alpha)/de2ra;
+                    var lon2 = BETA/de2ra+lon;
+                    
+                    points[2*azi] = lon2*400/180+400;
+                    points[2*azi+1] = lat2*200/90+200;
+                    
+                    var mirrorx = lon-(lon2-lon);
+                    var mirrory = lat2;
+                    
+                    points[718-2*azi] = mirrorx*400/180+400;
+                    points[719-2*azi] = mirrory*200/90+200;
+                }
+                
+                var draw_radius = (foot_radius/20000)*400;  // 400=half image width
                 var y = lat*200/90+200;
-                var a = alt
-                var foot_radius = Math.acos(6371/(6371+a))*6371;
-                var draw_radius = (foot_radius/20000)*400;
+                if ((draw_radius >= y) || (draw_radius >= 400-y)) {
+                    for (var i=0; i<359; i++) {
+                        for (var j=i+1; j<360; j++) {
+                            if (points[2*i]>points[2*j]) {
+                                var temp = points[2*i];
+                                points[2*i] = points[2*j];
+                                points[2*j] = temp;
+                                temp = points[2*i+1];
+                                points[2*i+1] = points[2*j+1];
+                                points[2*j+1] = temp;
+                            }
+                        }
+                    }
+                    
+                    // move point at position 0 to position 1
+                    points[2] = 0;
+                    points[3] = points[1];
+                    // move point at position N to position N-1
+                    points[716] = 800;
+                    points[717] = points[719];
+                    
+                    if (lat*de2ra < 0.0) {
+                        // insert (x0-1,y0) into position 0
+                        points[0] = 0;
+                        points[1] = 0;
+                        // insert (x0+width,y0) into position N
+                        points[718] = 800;
+                        points[719] = 0;
+                    } else {
+                        // insert (x0,y0+height) into position 0
+                        points[0] = 0;
+                        points[1] = 400;
+                        // insert (x0+width,y0+height) into position N
+                        points[718] = 800;
+                        points[719] = 400;
+                    }
+                }
+                
                 var spot = document.getElementById("MapCanvas");
                 var context = spot.getContext('2d');
                 context.clearRect(0, 0, spot.width, spot.height);
-                context.beginPath();
-                context.arc(x, y, draw_radius, 0, 2 * Math.PI, true);
+                
                 context.strokeStyle = 'yellow';
                 context.stroke();
+                
+                context.beginPath();
+                context.moveTo(points[0], points[1]);
+                for (var i=1; i<360; i++) {
+                    context.lineTo(points[2*i], points[2*i+1]);
+                }
+                context.closePath();
             }
         </script>
     </div>
